@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangyao.backend.dao.GoodDao">
+
+
+    <!--结果集映射,将数据库中的列(column)映射为类中的字段(property)-->
+    <resultMap id="BaseResultMap" type="com.wangyao.backend.bean.Good">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="categoryId" jdbcType="INTEGER" property="categoryId" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="price" jdbcType="DECIMAL" property="price" />
+        <result column="sprice" jdbcType="DECIMAL" property="sprice" />
+        <result column="desc" jdbcType="VARCHAR" property="desc" />
+        <result column="manufacturer" jdbcType="VARCHAR" property="manufacturer" />
+        <result column="purchaseDate" jdbcType="DATE" property="purchaseDate" />
+        <result column="saleDate" jdbcType="DATE" property="saleDate" />
+        <result column="appearanceValue" jdbcType="INTEGER" property="appearanceValue" />
+        <result column="functionValue" jdbcType="INTEGER" property="functionValue" />
+        <result column="packageValue" jdbcType="INTEGER" property="packageValue" />
+        <result column="dealType" jdbcType="INTEGER" property="dealType" />
+        <result column="userId" jdbcType="INTEGER" property="userId" />
+        <collection property="pictureList" ofType="com.wangyao.backend.bean.Picture">
+            <id column="p_id" jdbcType="INTEGER" property="id"/>
+            <result column="p_src" jdbcType="VARCHAR" property="src" />
+            <result column="p_type" jdbcType="INTEGER" property="type" />
+        </collection>
+        <collection property="tagList" ofType="com.wangyao.backend.bean.Tag">
+            <id column="t_id" jdbcType="INTEGER" property="id"/>
+            <result column="t_name" jdbcType="VARCHAR" property="name" />
+        </collection>
+        <collection property="user" ofType="com.wangyao.backend.bean.User">
+            <id column="u_id" jdbcType="INTEGER" property="id" />
+            <result column="u_addressId" jdbcType="INTEGER" property="addressId" />
+            <result column="u_loginName" jdbcType="VARCHAR" property="loginName" />
+            <result column="u_userName" jdbcType="VARCHAR" property="userName" />
+            <result column="u_phone" jdbcType="VARCHAR" property="phone" />
+            <result column="u_email" jdbcType="VARCHAR" property="email" />
+            <result column="u_photo" jdbcType="VARCHAR" property="photo" />
+        </collection>
+
+    </resultMap>
+    <!--用于后面代替*的列表-->
+    <sql id="Base_Column_List">
+        g.id,categoryId,g.name,price,sprice,g.`desc`,manufacturer,purchaseDate,saleDate,appearanceValue,functionValue,packageValue,dealType,userId,
+        p.id as p_id,p.src as p_src,p.type as p_type,
+        t.id as t_id,t.name as t_name
+    </sql>
+    <sql id="WithUser_Column_List">
+        g.id,categoryId,g.name,price,sprice,g.`desc`,manufacturer,purchaseDate,saleDate,appearanceValue,functionValue,packageValue,dealType,userId,
+        p.id as p_id,p.src as p_src,p.type as p_type,
+        t.id as t_id,t.name as t_name,
+        u.id as u_id,
+        u.addressId as u_addressId,
+        u.loginName as u_loginName,
+        u.userName as u_userName,
+        u.phone as u_phone,
+        u.email as u_email,
+        u.photo as u_photo
+    </sql>
+    <!--根据关系表picset和tagset 联了 good 和 picture 和 tag 得出的表-->
+    <sql id="Good_Join_Table">
+        good g
+        LEFT OUTER JOIN picset ps on g.id = ps.goodId
+        LEFT OUTER JOIN picture p on p.id = ps.picId
+        LEFT OUTER JOIN tagset ts on g.id = ts.goodId
+        LEFT OUTER JOIN tag t on t.id = ts.tagId
+    </sql>
+    <sql id="WithUser_Join_Table">
+        good g
+        LEFT OUTER JOIN picset ps on g.id = ps.goodId
+        LEFT OUTER JOIN picture p on p.id = ps.picId
+        LEFT OUTER JOIN tagset ts on g.id = ts.goodId
+        LEFT OUTER JOIN tag t on t.id = ts.tagId
+        LEFT OUTER JOIN user u on g.userId = u.id
+    </sql>
+    <insert id="insert" parameterType="com.wangyao.backend.bean.Good"
+            useGeneratedKeys="true" keyProperty="id">
+        --  用于回调Id useGeneratedKeys="true" keyProperty="id"
+        --      prefix 前部添加,suffix后部添加,prefixOverrides 前部删除 suffixOverrides后部删除
+        insert into good
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id !=0">
+                id,
+            </if>
+            <if test="categoryId != null">
+                categoryId,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="sprice != null">
+                sprice,
+            </if>
+            <if test="desc != null">
+                `desc`,
+            </if>
+            <if test="manufacturer != null">
+                `manufacturer`,
+            </if>
+            <if test="purchaseDate != null">
+                purchaseDate,
+            </if>
+            <if test="saleDate != null">
+                saleDate,
+            </if>
+            <if test="appearanceValue != null">
+                appearanceValue,
+            </if>
+            <if test="functionValue != null">
+                functionValue,
+            </if>
+            <if test="packageValue != null">
+                packageValue,
+            </if>
+            <if test="dealType != null">
+                dealType,
+            </if>
+            <if test="userId != null">
+                userId,
+            </if>
+        </trim>
+        <trim prefix=" values(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id !=0">
+                #{id},
+            </if>
+            <if test="categoryId != null">
+                #{categoryId},
+            </if>
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="price != null">
+                #{price},
+            </if>
+            <if test="sprice != null">
+                #{sprice},
+            </if>
+            <if test="desc != null">
+                #{desc},
+            </if>
+            <if test="manufacturer != null">
+                #{manufacturer},
+            </if>
+            <if test="purchaseDate != null">
+                #{purchaseDate},
+            </if>
+            <if test="saleDate != null">
+                #{saleDate},
+            </if>
+            <if test="appearanceValue != null">
+                #{appearanceValue},
+            </if>
+            <if test="functionValue != null">
+                #{functionValue},
+            </if>
+            <if test="packageValue != null">
+                #{packageValue},
+            </if>
+            <if test="dealType != null">
+                #{dealType},
+            </if>
+            <if test="userId != null">
+                #{userId},
+            </if>
+        </trim>
+    </insert>
+    <update id="update" parameterType="com.wangyao.backend.bean.Good">
+        update good
+        <set>
+            <if test="categoryId != null">
+                categoryId = #{categoryId},
+            </if>
+            <if test="name != null">
+                `name` = #{name},
+            </if>
+            <if test="price != null">
+                price = #{price},
+            </if>
+            <if test="sprice != null">
+                sprice = #{sprice},
+            </if>
+            <if test="desc != null">
+                `desc` = #{desc},
+            </if>
+            <if test="manufacturer != null">
+                manufacturer = #{manufacturer},
+            </if>
+            <if test="purchaseDate != null">
+                purchaseDate = #{purchaseDate},
+            </if>
+            <if test="saleDate != null">
+                saleDate = #{saleDate},
+            </if>
+            <if test="appearanceValue != null">
+                appearanceValue = #{appearanceValue},
+            </if>
+            <if test="functionValue != null">
+                functionValue = #{functionValue},
+            </if>
+            <if test="packageValue != null">
+                packageValue = #{packageValue},
+            </if>
+            <if test="dealType != null">
+                dealType = #{dealType},
+            </if>
+            <if test="userId != null">
+                userId = #{userId},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from good
+        where id = #{id}
+    </delete>
+
+    <select id="getGoodById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        Select
+        <include refid="Base_Column_List"></include>
+        From
+        <include refid="Good_Join_Table"></include>
+        where g.id=#{id}
+    </select>
+    <insert id="insertTagsetByGoodIdAndTagId" >
+        insert into tagset
+        (goodId, tagId)
+        VALUES
+        (#{goodId}, #{tagId})
+    </insert>
+    <select id="getAllGood" resultMap="BaseResultMap">
+        Select
+        <include refid="Base_Column_List"></include>
+        from
+        <include refid="Good_Join_Table"></include>
+    </select>
+    <select id="getAllGoodByUserId" resultMap="BaseResultMap">
+        Select
+        <include refid="Base_Column_List"></include>
+        from
+        <include refid="Good_Join_Table"></include>
+        where
+        g.userId = #{userId}
+    </select>
+    <select id="getAllGoodWithUser" resultMap="BaseResultMap">
+        Select
+        <include refid="WithUser_Column_List"></include>
+        from
+        <include refid="WithUser_Join_Table"></include>
+    </select>
+<!--    <select id="getUserByUserName" parameterType="java.lang.String" resultMap="BaseResultMap">-->
+<!--        Select-->
+<!--        <include refid="Base_Column_List"></include>-->
+<!--        from user-->
+<!--        where userName like #{userName}-->
+<!--    </select>-->
+
+</mapper>

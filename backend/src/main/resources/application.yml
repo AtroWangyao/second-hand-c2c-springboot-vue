@@ -1,0 +1,29 @@
+##常量
+upload-folder:
+  content: Z:\毕业设计\project\upload\
+
+
+spring:
+  #上传大小配置
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 100MB
+  #MySQL配置
+  datasource:
+    driverClassName:  com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/secondhand_shop?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=UTC
+    username: root
+    password: 123456
+
+#mybatis
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.example.demo.model
+logging:
+  level:
+    com.wangyao.backend.dao: debug
+server:
+  port: 9000
+

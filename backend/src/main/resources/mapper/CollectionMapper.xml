@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangyao.backend.dao.CollectionDao">
+
+
+    <!--结果集映射,将数据库中的列(column)映射为类中的字段(property)-->
+    <resultMap id="BaseResultMap" type="com.wangyao.backend.bean.Collection">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="goodId" jdbcType="INTEGER" property="goodId" />
+        <result column="userId" jdbcType="INTEGER" property="userId" />
+    </resultMap>
+    <!--用于后面代替*的列表-->
+    <sql id="Base_Column_List">
+        `id`,`goodId`, userId
+    </sql>
+    <insert id="insert" parameterType="com.wangyao.backend.bean.Collection"
+            useGeneratedKeys="true" keyProperty="id">--   回调id
+        insert into collection
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id !=0">
+                id,
+            </if>
+            <if test="goodId != null">
+                `goodId`,
+            </if>
+            <if test="userId != null">
+                `userId`,
+            </if>
+        </trim>
+        <trim prefix=" values(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id !=0">
+                #{id},
+            </if>
+            <if test="goodId != null">
+                #{goodId},
+            </if>
+            <if test="userId != null">
+                #{userId},
+            </if>
+        </trim>
+    </insert>
+    <update id="update" parameterType="com.wangyao.backend.bean.Collection">
+        update collection
+        <set>
+            <if test="goodId != null">
+                `goodId` = #{goodId},
+            </if>
+            <if test="userId != null">
+                `userId` = #{userId},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from collection
+        where id = #{id}
+    </delete>
+    <select id="getCollectionById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        Select
+        <include refid="Base_Column_List"></include>
+        From
+        collection
+        where id=#{id}
+    </select>
+    <select id="getAllCollectionByUserId" resultMap="BaseResultMap">
+        Select
+        <include refid="Base_Column_List"></include>
+        from
+        collection
+        where userId=#{userId}
+    </select>
+    <select id="getCollectionByUserIdAndGoodId" resultMap="BaseResultMap">
+        Select
+        <include refid="Base_Column_List"></include>
+        from
+        collection
+        where userId=#{userId} and goodId=#{goodId}
+    </select>
+
+</mapper>

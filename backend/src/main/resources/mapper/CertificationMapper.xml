@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangyao.backend.dao.CertificationDao">
+
+
+    <!--结果集映射,将数据库中的列(column)映射为类中的字段(property)-->
+    <resultMap id="BaseResultMap" type="com.wangyao.backend.bean.Certification">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="userId" jdbcType="INTEGER" property="userId" />
+        <result column="status" jdbcType="INTEGER" property="status" />
+        <result column="picture1" jdbcType="VARCHAR" property="picture1" />
+        <result column="picture2" jdbcType="VARCHAR" property="picture2" />
+        <result column="message" jdbcType="VARCHAR" property="message" />
+        <result column="idCardNumber" jdbcType="VARCHAR" property="idCardNumber" />
+        <result column="realName" jdbcType="VARCHAR" property="realName" />
+    </resultMap>
+    <!--用于后面代替*的列表-->
+    <sql id="Base_Column_List">
+        `id`,`userId`, status,`picture1`,`picture2`, `message`,`idCardNumber`,`realName`
+
+    </sql>
+    <sql id="Certification_Join_Table">
+        certification
+    </sql>
+    <insert id="insert" parameterType="com.wangyao.backend.bean.Certification"> --      prefix 前部添加,suffix后部添加,prefixOverrides 前部删除 suffixOverrides后部删除
+        insert into certification
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id != 0">
+                id,
+            </if>
+            <if test="userId != null">
+                `userId`,
+            </if>
+            <if test="status != null">
+                `status`,
+            </if>
+            <if test="picture1 != null">
+                `picture1`,
+            </if>
+            <if test="picture2 != null">
+                `picture2`,
+            </if>
+            <if test="message != null">
+                `message`,
+            </if>
+            <if test="idCardNumber != null">
+                `idCardNumber`,
+            </if>
+            <if test="realName != null">
+                `realName`,
+            </if>
+        </trim>
+        <trim prefix=" values(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id !=0">
+                #{id},
+            </if>
+            <if test="userId != null">
+                #{userId},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="picture1 != null">
+                #{picture1},
+            </if>
+            <if test="picture2 != null">
+                #{picture2},
+            </if>
+            <if test="message != null">
+                #{message},
+            </if>
+            <if test="idCardNumber != null">
+                #{idCardNumber},
+            </if>
+            <if test="realName != null">
+                #{realName},
+            </if>
+        </trim>
+    </insert>
+    <update id="update" parameterType="com.wangyao.backend.bean.Certification">
+        update certification
+        <set>
+            <if test="userId != null">
+                `userId` = #{userId},
+            </if>
+            <if test="status != null">
+                `status` = #{status},
+            </if>
+            <if test="picture1 != null">
+                `picture1` = #{picture1},
+            </if>
+            <if test="picture2 != null">
+                `picture2` = #{picture2},
+            </if>
+            <if test="message != null">
+                `message` = #{message},
+            </if>
+            <if test="idCardNumber != null">
+                `idCardNumber` = #{idCardNumber},
+            </if>
+            <if test="realName != null">
+                `realName` = #{realName},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from certification
+        where id = #{id}
+    </delete>
+    <select id="getCertificationById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        Select
+        <include refid="Base_Column_List"></include>
+        From
+        <include refid="Certification_Join_Table"></include>
+        where id=#{id}
+    </select>
+    <select id="getAllCertification" resultMap="BaseResultMap">
+        Select
+        <include refid="Base_Column_List"></include>
+        from
+        <include refid="Certification_Join_Table"></include>
+    </select>
+    <select id="getAllCertificationByUserId" resultMap="BaseResultMap">
+        Select
+        <include refid="Base_Column_List"></include>
+        from
+        <include refid="Certification_Join_Table"></include>
+        where userId=#{userId}
+    </select>
+
+</mapper>

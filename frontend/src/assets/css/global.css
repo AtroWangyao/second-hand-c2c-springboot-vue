@@ -1,0 +1,37 @@
+HTML,body,#app{
+    height:100%;
+    margin:0;
+    padding:0;
+}
+.floatLeft{
+    float:left;
+}
+.floatRight{
+    float:right;
+}
+.fontType1{
+    font-size:14px;
+    /* color: cornflowerblue; */
+}
+.fontType2{
+    font-size:14px;
+    color:#79b6c8;
+}
+.fontType3{
+    font-size:12px;
+    margin-top:30px;
+    display: inline-block;
+    color:#79b6c8;
+}
+.fontColorRed{
+    color:#c10000;
+}
+.redBorder{
+    border:red solid 2px;
+}
+.inlineBlock{
+    display: inline-block;
+}
+.blue{
+    color:blue;
+}

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangyao.backend.dao.OrderDao">
+
+
+    <!--结果集映射,将数据库中的列(column)映射为类中的字段(property)-->
+    <resultMap id="BaseResultMap" type="com.wangyao.backend.bean.Order">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="number" jdbcType="VARCHAR" property="number" />
+        <result column="sellerId" jdbcType="INTEGER" property="sellerId" />
+        <result column="buyerId" jdbcType="INTEGER" property="buyerId" />
+        <result column="dealType" jdbcType="INTEGER" property="dealType" />
+        <result column="date" jdbcType="DATE" property="date" />
+        <result column="status" jdbcType="INTEGER" property="status" />
+        <result column="userAddressId" jdbcType="INTEGER" property="userAddressId" />
+        <result column="money" jdbcType="DECIMAL" property="money" />
+        <result column="goodId" jdbcType="INTEGER" property="goodId" />
+        <result column="offlineDealDate" jdbcType="TIMESTAMP" property="offlineDealDate" />
+        <association property="userAddress" javaType="com.wangyao.backend.bean.UserAddress">
+            <id column="ua_id" jdbcType="INTEGER" property="id"/>
+            <result column="cityId" jdbcType="INTEGER" property="cityId"/>
+            <result column="detail" jdbcType="VARCHAR" property="detail"/>
+            <result column="name" jdbcType="VARCHAR" property="name"/>
+        </association>
+        <association property="good" javaType="com.wangyao.backend.bean.Good">
+            <id column="g_id" jdbcType="INTEGER" property="id"/>
+            <result column="g_name" jdbcType="INTEGER" property="name"/>
+        </association>
+    </resultMap>
+    <!--用于后面代替*的列表-->
+    <sql id="Base_Column_List">
+            o.id,`number`, sellerId,`buyerId`,o.`dealType`, `date`,`status`,`userAddressId`,`money`,`goodId`,`offlineDealDate`,
+            ua.id as ua_id,ua.cityId,ua.detail,ua.name,
+            g.id as g_id,g.`name` as g_name
+    </sql>
+    <sql id="Order_Join_Table">
+        `order` o
+        LEFT OUTER JOIN userAddress ua on o.userAddressId = ua.id
+        LEFT OUTER JOIN good g on o.goodId = g.id
+    </sql>
+    <insert id="insert" parameterType="com.wangyao.backend.bean.Order">
+        --      prefix 前部添加,suffix后部添加,prefixOverrides 前部删除 suffixOverrides后部删除
+        insert into `order`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id !=0">
+                id,
+            </if>
+            <if test="number != null">
+                `number`,
+            </if>
+            <if test="sellerId != null">
+                `sellerId`,
+            </if>
+            <if test="buyerId != null">
+                `buyerId`,
+            </if>
+            <if test="dealType != null">
+                `dealType`,
+            </if>
+            <if test="date != null">
+                `date`,
+            </if>
+            <if test="status != null">
+                `status`,
+            </if>
+            <if test="userAddressId != null">
+                `userAddressId`,
+            </if>
+            <if test="money != null">
+                `money`,
+            </if>
+            <if test="goodId != null">
+                `goodId`,
+            </if>
+            <if test="offlineDealDate != null">
+                `offlineDealDate`,
+            </if>
+        </trim>
+        <trim prefix=" values(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id !=0">
+                #{id},
+            </if>
+            <if test="number != null">
+                #{number},
+            </if>
+            <if test="sellerId != null">
+                #{sellerId},
+            </if>
+            <if test="buyerId != null">
+                #{buyerId},
+            </if>
+            <if test="dealType != null">
+                #{dealType},
+            </if>
+            <if test="date != null">
+                #{date},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="userAddressId != null">
+                #{userAddressId},
+            </if>
+            <if test="money != null">
+                #{money},
+            </if>
+            <if test="goodId != null">
+                #{goodId},
+            </if>
+            <if test="offlineDealDate != null">
+                #{offlineDealDate},
+            </if>
+        </trim>
+    </insert>
+    <update id="update" parameterType="com.wangyao.backend.bean.Order">
+        update `order`
+        <set>
+            <if test="number != null">
+                `number` = #{number},
+            </if>
+            <if test="sellerId != null">
+                `sellerId` = #{sellerId},
+            </if>
+            <if test="buyerId != null">
+                `buyerId` = #{buyerId},
+            </if>
+            <if test="dealType != null">
+                `dealType` = #{dealType},
+            </if>
+            <if test="date != null">
+                `date` = #{date},
+            </if>
+            <if test="status != null">
+                `status` = #{status},
+            </if>
+            <if test="userAddressId != null">
+                `userAddressId` = #{userAddressId},
+            </if>
+            <if test="money != null">
+                `money` = #{money},
+            </if>
+            <if test="money != null">
+                `goodId` = #{goodId},
+            </if>
+            <if test="offlineDealDate != null">
+                `offlineDealDate` = #{offlineDealDate},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from `order`
+        where id = #{id}
+    </delete>
+    <select id="getOrderById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        Select
+        <include refid="Base_Column_List"></include>
+        From
+        <include refid="Order_Join_Table"></include>
+        where o.id=#{id}
+    </select>
+    <select id="getOrderBySellerId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        Select
+        <include refid="Base_Column_List"></include>
+        From
+        <include refid="Order_Join_Table"></include>
+        where sellerId=#{sellerId}
+    </select>
+    <select id="getOrderByBuyerId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        Select
+        <include refid="Base_Column_List"></include>
+        From
+        <include refid="Order_Join_Table"></include>
+        where buyerId=#{buyerId}
+    </select>
+    <select id="getAllOrder" resultMap="BaseResultMap">
+        Select
+        <include refid="Base_Column_List"></include>
+        from
+        <include refid="Order_Join_Table"></include>
+    </select>
+
+</mapper>

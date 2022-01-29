@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangyao.backend.dao.UserDao">
+
+
+<!--结果集映射,将数据库中的列(column)映射为类中的字段(property)-->
+    <resultMap id="BaseResultMap" type="com.wangyao.backend.bean.User">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="addressId" jdbcType="INTEGER" property="addressId" />
+        <result column="type" jdbcType="INTEGER" property="type" />
+        <result column="loginName" jdbcType="VARCHAR" property="loginName" />
+        <result column="loginPassword" jdbcType="VARCHAR" property="loginPassword" />
+        <result column="userName" jdbcType="VARCHAR" property="userName" />
+        <result column="phone" jdbcType="VARCHAR" property="phone" />
+        <result column="email" jdbcType="VARCHAR" property="email" />
+        <result column="photo" jdbcType="VARCHAR" property="photo" />
+    </resultMap>
+    <!--用于后面代替*的列表-->
+    <sql id="Base_Column_List">
+        id,addressId,`type`,loginName,loginPassword,userName,phone,email,photo
+    </sql>
+    <insert id="insert" parameterType="com.wangyao.backend.bean.User">
+--      prefix 前部添加,suffix后部添加,prefixOverrides 前部删除 suffixOverrides后部删除
+        insert into user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id !=0">
+                id,
+            </if>
+            <if test="addressId != null">
+                addressId,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="userName != null">
+                userName,
+            </if>
+            <if test="loginName != null">
+                loginName,
+            </if>
+            <if test="loginPassword != null">
+                loginPassword,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="photo != null">
+                photo,
+            </if>
+        </trim>
+        <trim prefix=" values(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id !=0">
+                #{id},
+            </if>
+            <if test="addressId != null">
+                #{addressId},
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+            <if test="userName != null">
+                #{userName},
+            </if>
+            <if test="loginName != null">
+                #{loginName},
+            </if>
+            <if test="loginPassword != null">
+                #{loginPassword},
+            </if>
+            <if test="phone != null">
+                #{phone},
+            </if>
+            <if test="email != null">
+                #{email},
+            </if>
+            <if test="photo != null">
+                #{photo},
+            </if>
+        </trim>
+    </insert>
+    <update id="update" parameterType="com.wangyao.backend.bean.User">
+        update user
+        <set>
+            <if test="addressId != null">
+                addressId = #{addressId},
+            </if>
+            <if test="loginName != null">
+                loginName = #{loginName},
+            </if>
+            <if test="type != null">
+                `type` = #{type},
+            </if>
+            <if test="userName != null">
+                userName = #{userName},
+            </if>
+            <if test="loginPassword != null">
+                loginPassword = #{loginPassword},
+            </if>
+            <if test="phone != null">
+                phone = #{phone},
+            </if>
+            <if test="email != null">
+                email = #{email},
+            </if>
+            <if test="photo != null">
+                photo = #{photo},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from user
+        where id = #{id}
+    </delete>
+    <select id="getUserByLoginMessage" resultMap="BaseResultMap">
+        Select
+        <include refid="Base_Column_List"></include>
+        from user WHERE
+        loginName =#{loginName} AND loginPassword=#{loginPassword}
+    </select>
+    <select id="getUserById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        Select
+            id,addressId,`type`,loginName,loginPassword,userName,phone,email,photo
+        from user
+        where id=#{id}
+    </select>
+    <select id="getAllUser" resultMap="BaseResultMap">
+        Select
+        <include refid="Base_Column_List"></include>
+        from user
+    </select>
+    <select id="getUserByUserName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        Select
+        <include refid="Base_Column_List"></include>
+        from user
+        where userName like #{userName}
+    </select>
+
+</mapper>

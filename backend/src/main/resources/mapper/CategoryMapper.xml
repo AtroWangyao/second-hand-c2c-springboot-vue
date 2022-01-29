@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangyao.backend.dao.CategoryDao">
+
+
+    <!--结果集映射,将数据库中的列(column)映射为类中的字段(property)-->
+    <resultMap id="BaseResultMap" type="com.wangyao.backend.bean.Category">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="desc" jdbcType="VARCHAR" property="desc" />
+    </resultMap>
+    <!--用于后面代替*的列表-->
+    <sql id="Base_Column_List">
+        id,name,`desc`
+    </sql>
+    <insert id="insert" parameterType="com.wangyao.backend.bean.Category">
+        --      prefix 前部添加,suffix后部添加,prefixOverrides 前部删除 suffixOverrides后部删除
+        insert into category
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id !=0">
+                id,
+            </if>
+            <if test="name != null">
+                `name`,
+            </if>
+            <if test="desc != null">
+                `desc`,
+            </if>
+        </trim>
+        <trim prefix=" values(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id !=0">
+                #{id},
+            </if>
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="desc != null">
+                #{desc},
+            </if>
+        </trim>
+    </insert>
+    <update id="update" parameterType="com.wangyao.backend.bean.Category">
+        update category
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="desc != null">
+                `desc` = #{desc},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from category
+        where id = #{id}
+    </delete>
+    <select id="getCategoryById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        Select
+        <include refid="Base_Column_List"></include>
+        From
+        category
+        where id=#{id}
+    </select>
+    <select id="getAllCategory" resultMap="BaseResultMap">
+        Select
+        <include refid="Base_Column_List"></include>
+        from category
+    </select>
+
+</mapper>

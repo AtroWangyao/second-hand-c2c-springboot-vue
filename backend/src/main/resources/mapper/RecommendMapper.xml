@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangyao.backend.dao.RecommendDao">
+
+
+    <!--结果集映射,将数据库中的列(column)映射为类中的字段(property)-->
+    <resultMap id="BaseResultMap" type="com.wangyao.backend.bean.Recommend">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="goodId" jdbcType="INTEGER" property="goodId" />
+        <result column="type" jdbcType="INTEGER" property="type" />
+    </resultMap>
+    <!--用于后面代替*的列表-->
+    <sql id="Base_Column_List">
+        `id`,`goodId`, `type`
+    </sql>
+    <insert id="insert" parameterType="com.wangyao.backend.bean.Recommend">
+        insert into recommend
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id !=0">
+                id,
+            </if>
+            <if test="goodId != null">
+                `goodId`,
+            </if>
+            <if test="type != null">
+                `type`,
+            </if>
+        </trim>
+        <trim prefix=" values(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id !=0">
+                #{id},
+            </if>
+            <if test="goodId != null">
+                #{goodId},
+            </if>
+            <if test="type != null">
+                #{type},
+            </if>
+        </trim>
+    </insert>
+    <update id="update" parameterType="com.wangyao.backend.bean.Recommend">
+        update recommend
+        <set>
+            <if test="goodId != null">
+                `goodId` = #{goodId},
+            </if>
+            <if test="type != null">
+                `type` = #{type},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from recommend
+        where id = #{id}
+    </delete>
+    <delete id="deleteByType" parameterType="java.lang.Integer">
+        delete from recommend
+        where `type` = #{type}
+    </delete>
+    <select id="getRecommendById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        Select
+        <include refid="Base_Column_List"></include>
+        From
+        recommend
+        where id=#{id}
+    </select>
+    <select id="getAllRecommendByType" resultMap="BaseResultMap">
+        Select
+        <include refid="Base_Column_List"></include>
+        from
+        recommend
+        where type=#{type}
+    </select>
+
+
+</mapper>
